@@ -20,5 +20,6 @@ public class MainActivity extends AppCompatActivity {
         myRef.child("test").setValue("aaa");
         Log.d("ketqua", "onCreate: ");
         a=10;
+        int b=a;
     }
 }
