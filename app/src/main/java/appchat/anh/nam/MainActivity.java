@@ -29,5 +29,8 @@ public class MainActivity extends AppCompatActivity {
         a=10;
         a++;
         Log.d(TAG, "onCreate: push 09/08");
+
+        int b=a;
+        Log.d(TAG, "onCreate: "+123456);
     }
 }
