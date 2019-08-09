@@ -32,8 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
         int b=a;
         Log.d(TAG, "onCreate: hoanganhktd");
+
         int c = b;
         Log.d(TAG, "onCreate: "+c);
-        Log.d(TAG, "onCreate: xyz");
+
+        Log.d(TAG, "onCreate: new");
     }
 }
