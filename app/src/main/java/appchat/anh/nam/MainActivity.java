@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
         myRef.child("test").setValue("aaa");
-        Log.d(TAG, "onCreate: ");
-                
+        Log.d("ketqua", "onCreate: ");
     }
 }
