@@ -29,5 +29,6 @@ public class MainActivity extends AppCompatActivity {
         a=10;
 
         int b=a;
+        Log.d(TAG, "onCreate: "+123456);
     }
 }
