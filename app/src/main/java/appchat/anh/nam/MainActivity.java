@@ -2,6 +2,7 @@ package appchat.anh.nam;
 
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,5 +18,6 @@ public class MainActivity extends AppCompatActivity {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
         myRef.child("test").setValue("aaa");
+        Log.d("ketqua", "onCreate: ");
     }
 }
