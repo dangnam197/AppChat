@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("ketqua", "onCreate: ");
 
         a=10;
+        a++;
         Log.d(TAG, "onCreate: push 09/08");
     }
 }
