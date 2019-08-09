@@ -32,5 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
         int b=a;
         Log.d(TAG, "onCreate: hoanganhktd");
+        Log.d(TAG, "onCreate: xyz");
     }
 }
