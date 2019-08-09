@@ -10,7 +10,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
+
     private int a;
+
+
+
+    private static final String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,7 +25,9 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference myRef = database.getReference();
         myRef.child("test").setValue("aaa");
         Log.d("ketqua", "onCreate: ");
+
         a=10;
+
         int b=a;
     }
 }
