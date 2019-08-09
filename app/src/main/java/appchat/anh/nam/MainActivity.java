@@ -21,5 +21,6 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference myRef = database.getReference();
         myRef.child("test").setValue("aaa");
         Log.d("ketqua", "onCreate: ");
+        int b=a;
     }
 }
