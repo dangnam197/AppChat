@@ -1,23 +1,17 @@
 package appchat.anh.nam.model;
 
 public class User {
-    private String id;
     private String fullName;
+    private String id;
     private String profilePic;
     private String status;
   
     public User() {
     }
 
-    public User(String id, String fullName, String profilePic, String status) {
+    public User(String fullName, String id, String profilePic, String status) {
+        this.fullName = fullName;
         this.id = id;
-        this.fullName = fullName;
-        this.profilePic = profilePic;
-        this.status = status;
-    }
-
-    public User(String fullName, String profilePic, String status) {
-        this.fullName = fullName;
         this.profilePic = profilePic;
         this.status = status;
     }
