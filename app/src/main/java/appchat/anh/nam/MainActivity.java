@@ -12,7 +12,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import appchat.anh.nam.login.LoginFragment;
-
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -35,6 +34,5 @@ public class MainActivity extends AppCompatActivity {
         LoginFragment loginFragment = new LoginFragment();
         fragmentTransaction.replace(R.id.frame, loginFragment);
         fragmentTransaction.commit();
-
     }
 }

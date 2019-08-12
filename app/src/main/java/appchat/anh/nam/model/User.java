@@ -5,7 +5,7 @@ public class User {
     private String fullName;
     private String profilePic;
     private String status;
-
+  
     public User() {
     }
 
