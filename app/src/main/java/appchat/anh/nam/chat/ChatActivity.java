@@ -16,5 +16,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setFragmentChat() {
+      //  getSupportFragmentManager().beginTransaction().replace(R.id.frame_chat)
     }
 }
