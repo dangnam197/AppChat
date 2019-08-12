@@ -1,22 +1,19 @@
 package appchat.anh.nam.model;
 
 public class Group {
-    private String id;
     private String createAt;
-    private String name;
     private String groupIcon;
+    private String id;
+    private String name;
 
-    public Group(String createAt, String name, String groupIcon) {
-        this.createAt = createAt;
-        this.name = name;
-        this.groupIcon = groupIcon;
+    public Group() {
     }
 
-    public Group(String id, String createAt, String name, String groupIcon) {
-        this.id = id;
+    public Group(String createAt, String groupIcon, String id, String name) {
         this.createAt = createAt;
-        this.name = name;
         this.groupIcon = groupIcon;
+        this.id = id;
+        this.name = name;
     }
 
     public String getId() {
