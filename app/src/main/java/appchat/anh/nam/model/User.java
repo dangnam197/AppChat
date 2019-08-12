@@ -5,7 +5,9 @@ public class User {
     private String fullName;
     private String profilePic;
     private String status;
-
+  
+    public User() {
+    }
 
     public User(String id, String fullName, String profilePic, String status) {
         this.id = id;
