@@ -73,22 +73,29 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public class SendViewHolder extends RecyclerView.ViewHolder{
+        private TextView mTvMessage;
         private void bindViewHolder(Message message){
-
+            mTvMessage.setText(message.getMessage());
         }
-        public SendViewHolder(@NonNull View itemView) {
+        private SendViewHolder(@NonNull View itemView) {
             super(itemView);
+            mTvMessage = itemView.findViewById(R.id.messenger_send);
         }
     }
     public class ReceiveViewHolder extends RecyclerView.ViewHolder{
         private TextView mTvMessage;
         private TextView mTvUserName;
         private ImageView mUserPic;
-        private View mStatus;
+        private ImageView mStatus;
         private void bindViewHolder(Message message){
-            mTvUserName.setText(message.getMessage());
+            mTvMessage.setText(message.getMessage());
             mTvUserName.setText(mHashMapUsers.get(message.getFromId()).getFullName());
-           // Glide.with()
+            if(mHashMapUsers.get(message.getFromId()).getStatus().equals(Contact.STATUS_ONLINE)){
+                Glide.with(mContext).load(R.drawable.status_online).into(mStatus);
+            }else {
+                Glide.with(mContext).load(R.drawable.status_offline).into(mStatus);
+            }
+            Glide.with(mContext).load(mHashMapUsers.get(message.getFromId()).getProfilePic()).into(mUserPic);
         }
         private ReceiveViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -97,5 +104,24 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mUserPic = itemView.findViewById(R.id.img_user_pic);
             mStatus = itemView.findViewById(R.id.status);
         }
+    }
+    public void addAllItem(ArrayList<Message> list){
+        mListMessages.addAll(list);
+        notifyDataSetChanged();
+    }
+    public void addItem(Message message){
+        mListMessages.add(message);
+        notifyDataSetChanged();
+    }
+    public void addAllUser(HashMap<String,User> userHashMap){
+        mHashMapUsers.putAll(userHashMap);
+        notifyDataSetChanged();
+    }
+    public void addUser(String key,User user){
+        mHashMapUsers.put(key,user);
+        notifyDataSetChanged();
+    }
+    public ArrayList<Message> getListMessages(){
+        return mListMessages;
     }
 }
