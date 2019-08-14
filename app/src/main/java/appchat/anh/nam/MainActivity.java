@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private FragmentTransaction mFragmentTransaction;
     private FirebaseAuth mFireBaseAuth;
+    private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
     private RegisterFragment.ActionRegisterInterface mActionRegisterInterface = new RegisterFragment.ActionRegisterInterface() {
         @Override
@@ -36,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 initGroupChatFragment(currentUserId);
-                DatabaseReference data = FirebaseDatabase.getInstance().getReference();
-                data.child(Contact.TABLE_USER).child(currentUserId).child(Contact.TABLE_USER_DETAIL).child("status").setValue("online");
+                mDatabaseReference.child(Contact.TABLE_USER).child(currentUserId).child("status").setValue("online");
             }
         }
 
@@ -139,4 +139,9 @@ public class MainActivity extends AppCompatActivity {
         mFragmentTransaction.commit();
     }
 
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+    }
 }
