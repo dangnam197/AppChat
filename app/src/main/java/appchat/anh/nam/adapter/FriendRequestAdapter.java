@@ -64,6 +64,8 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
             public void onClick(View v) {
                 if(mOnClickListener!=null){
                     mOnClickListener.acceptFriendClick(mListUser.get(getAdapterPosition()),getAdapterPosition());
+                    mBtnAcceptFriend.setVisibility(View.GONE);
+                    mBtnRefuseFriend.setVisibility(View.GONE);
                 }
             }
         };
@@ -94,8 +96,15 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
     public void addUser(User user){
         if(user!=null){
             mListUser.add(user);
-            notifyDataSetChanged();
+           // notifyDataSetChanged();
+            notifyItemInserted(mListUser.size()-1);
 
+        }
+    }
+    public void remove(int position){
+        if(position>=0&&position<mListUser.size()){
+            mListUser.remove(position);
+            notifyItemRemoved(position);
         }
     }
 }

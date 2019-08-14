@@ -57,8 +57,11 @@ public class FriendFragment extends Fragment {
                     User user = snapshot.getValue(User.class);
                     Log.d(TAG, "onDataChange: "+user.getFullName());
                     if(user!=null){
-                        mFriendAdapte.addUser(user);
+                        list.add(user);
                     }
+                }
+                if(list.size()>0){
+                    mFriendAdapte.addAllUser(list);
                 }
             }
 
