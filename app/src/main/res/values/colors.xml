@@ -8,4 +8,5 @@
     <color name="textLink">#2A4FDF</color>
     <color name="message_send_background_color">#2196F3</color>
     <color name="colorWhite">#fff</color>
+    <color name="backGroundTabLayout">#D8D8D8</color>
 </resources>

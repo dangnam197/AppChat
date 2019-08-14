@@ -1,6 +1,7 @@
 package appchat.anh.nam.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +9,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+
 import appchat.anh.nam.R;
 import appchat.anh.nam.model.Group;
 import appchat.anh.nam.model.Message;
@@ -83,7 +89,8 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
             }
             mTxtNameGroup.setText(group.getName());
             mTxtContentMessage.setText(mHashMapMessage.get(group.getId()).getMessage());
-            mTxtTimeMessage.setText(String.valueOf(mHashMapMessage.get(group.getId()).getTime()));
+            mTxtTimeMessage.setText(convertTime((mHashMapMessage.get(group.getId()).getTime())));
+            Log.d("ketqua", "setData: "+mHashMapMessage.get(group.getId()).getTime());
         }
     }
 
@@ -110,5 +117,20 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
             mHashMapMessage.get(idGroup).setMessage("Đã nhận một hình ảnh");
         }
         notifyDataSetChanged();
+    }
+
+    private String convertTime(long time){
+        long differentTime = System.currentTimeMillis()/1000-time;
+        Log.d("ketqua", "convertTime: "+differentTime);
+        if(differentTime>86400){
+            Date date = new Date(time*1000);
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMM");
+            String textTime = sdf.format(date);
+            return textTime;
+        }
+        Date date = new Date(time*1000);
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm", Locale.CHINA);
+        String textTime = sdf.format(date);
+        return textTime;
     }
 }

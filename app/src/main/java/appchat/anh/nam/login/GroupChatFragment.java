@@ -1,7 +1,6 @@
 package appchat.anh.nam.login;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,24 +10,20 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import appchat.anh.nam.FriendFragment;
 import appchat.anh.nam.R;
-import appchat.anh.nam.adapter.GroupChatAdapter;
+import appchat.anh.nam.adapter.GroupFriendPagerAdapter;
 import appchat.anh.nam.common.Contact;
-import appchat.anh.nam.model.Group;
-import appchat.anh.nam.model.Message;
 import appchat.anh.nam.model.User;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -37,28 +32,26 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class GroupChatFragment extends Fragment {
 
-    private RecyclerView mRecyclerViewGroupChat;
     private CircleImageView mImgAvatarCurrentUser;
     private TextView mTxtCurrentUserName, mTxtLogOut;
-
-    private GroupChatAdapter.ItemGroupChatClick mItemGroupChatClick = new GroupChatAdapter.ItemGroupChatClick() {
-        @Override
-        public void onGroupClick(int position) {
-            mCallBack.actionCallChatActivity(mIdUser, mArrIdGroup.get(position));
-        }
-    };
-
-    private final GroupChatAdapter mGroupChatAdapter = new GroupChatAdapter(new ArrayList<Group>(), new HashMap<String, Message>(), mItemGroupChatClick);
-    private ArrayList<String> mArrIdGroup = new ArrayList<>();
+    private ViewPager mViewPager;
+    private TabLayout mTabLayout;
     private DatabaseReference mData;
     private String mIdUser;
-    private GroupChatCallBackActivity mCallBack;
+    private GroupChatCallBackActivity mCallBackActivity;
     private static final String TAG = "ketqua";
 
     private View.OnClickListener mTxtLogOutClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            mCallBack.actionSignOut();
+            mCallBackActivity.actionSignOut();
+        }
+    };
+
+    private GroupFragment.CallBackGroupChatFragment mCallBackGroupChatFragment = new GroupFragment.CallBackGroupChatFragment() {
+        @Override
+        public void onItemGroupClick(String idUser, String idGroup) {
+            mCallBackActivity.actionCallChatActivity(idUser, idGroup);
         }
     };
 
@@ -71,29 +64,28 @@ public class GroupChatFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_group_chat, container, false);
         initView(view);
-        initAction();
         initBundle();
-        initRecyclerView();
+        initViewPager();
+        initAction();
         initData();
         return view;
     }
 
     public void setInterface(GroupChatCallBackActivity callBack){
-        mCallBack = callBack;
+        mCallBackActivity = callBack;
     }
 
     private void initView(View view) {
-        mRecyclerViewGroupChat = view.findViewById(R.id.recyclerViewGroupChat);
         mImgAvatarCurrentUser = view.findViewById(R.id.imgAvatarCurrentUser);
         mTxtCurrentUserName = view.findViewById(R.id.txtCurrentUserName);
         mTxtLogOut = view.findViewById(R.id.txtLogOut);
-
+        mViewPager = view.findViewById(R.id.viewPager);
+        mTabLayout = view.findViewById(R.id.tabLayout);
     }
 
     private void initAction(){
@@ -122,48 +114,6 @@ public class GroupChatFragment extends Fragment {
                         mTxtCurrentUserName.setText(user.getFullName());
                     }
                 }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-            final DatabaseReference dataGroup = mData.child("Groups");
-            mData.child(Contact.TABLE_FRIENDS_GROUPS).child(mIdUser).child(Contact.TABLE_GROUP).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                        final String id = (String) dataSnapshot1.getValue();
-                        mArrIdGroup.add(id);
-                        dataGroup.child(id).child("recentMessage").addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                Message message = dataSnapshot.getValue(Message.class);
-                                mGroupChatAdapter.updateRecentMessage(id, message);
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-
-                        dataGroup.child(id).child("GroupDetail").addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                Group group = dataSnapshot.getValue(Group.class);
-                                Log.d(TAG, "onDataChange: "+group.getName());
-                                mGroupChatAdapter.addGroupChat(group);
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-                }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -172,10 +122,16 @@ public class GroupChatFragment extends Fragment {
         }
     }
 
-    private void initRecyclerView() {
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        mRecyclerViewGroupChat.setAdapter(mGroupChatAdapter);
-        mRecyclerViewGroupChat.setLayoutManager(layoutManager);
+    private void initViewPager(){
+        GroupFriendPagerAdapter mPagerAdapter = new GroupFriendPagerAdapter(getFragmentManager());
+        GroupFragment groupFragment = GroupFragment.newInstance(mIdUser);
+        groupFragment.setInterface(mCallBackGroupChatFragment);
+        FriendFragment friendFragment = FriendFragment.newInstance(mIdUser);
+        mPagerAdapter.addFragment(groupFragment);
+        mPagerAdapter.addFragment(friendFragment);
+        mViewPager.setAdapter(mPagerAdapter);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.getTabAt(0).setIcon(R.drawable.group);
+        mTabLayout.getTabAt(1).setIcon(R.drawable.search);
     }
-
 }
