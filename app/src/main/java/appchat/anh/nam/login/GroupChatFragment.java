@@ -1,6 +1,7 @@
 package appchat.anh.nam.login;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,7 +40,15 @@ public class GroupChatFragment extends Fragment {
     private RecyclerView mRecyclerViewGroupChat;
     private CircleImageView mImgAvatarCurrentUser;
     private TextView mTxtCurrentUserName, mTxtLogOut;
-    private final GroupChatAdapter mGroupChatAdapter = new GroupChatAdapter(new ArrayList<Group>(), new HashMap<String, Message>());
+
+    private GroupChatAdapter.ItemGroupChatClick mItemGroupChatClick = new GroupChatAdapter.ItemGroupChatClick() {
+        @Override
+        public void onGroupClick(int position) {
+            mCallBack.actionCallChatActivity(mIdUser, mArrIdGroup.get(position));
+        }
+    };
+
+    private final GroupChatAdapter mGroupChatAdapter = new GroupChatAdapter(new ArrayList<Group>(), new HashMap<String, Message>(), mItemGroupChatClick);
     private ArrayList<String> mArrIdGroup = new ArrayList<>();
     private DatabaseReference mData;
     private String mIdUser;
@@ -55,6 +64,7 @@ public class GroupChatFragment extends Fragment {
 
     public interface GroupChatCallBackActivity{
         void actionSignOut();
+        void actionCallChatActivity(String idUser, String idGroup);
     }
 
     public GroupChatFragment() {
@@ -106,7 +116,7 @@ public class GroupChatFragment extends Fragment {
                     Log.d(TAG, "onDataChange: "+dataSnapshot.toString());
                     User user = dataSnapshot.getValue(User.class);
                     if(user.getProfilePic()!=null){
-                        Glide.with(getContext()).load(user.getProfilePic()).placeholder(R.drawable.anh).into(mImgAvatarCurrentUser);
+                        Glide.with(getContext()).load(user.getProfilePic()).placeholder(R.drawable.default_user).into(mImgAvatarCurrentUser);
                     }
                     if(user.getFullName()!=null){
                         mTxtCurrentUserName.setText(user.getFullName());
@@ -123,11 +133,8 @@ public class GroupChatFragment extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
                         final String id = (String) dataSnapshot1.getValue();
-
                         mArrIdGroup.add(id);
-
                         dataGroup.child(id).child("recentMessage").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

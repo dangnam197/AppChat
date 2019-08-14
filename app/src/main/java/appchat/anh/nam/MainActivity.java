@@ -1,6 +1,7 @@
 package appchat.anh.nam;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,6 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import appchat.anh.nam.chat.ChatActivity;
 import appchat.anh.nam.common.Contact;
 import appchat.anh.nam.login.GroupChatFragment;
 import appchat.anh.nam.login.LoginFragment;
@@ -70,6 +72,14 @@ public class MainActivity extends AppCompatActivity {
             firebaseAuth.signOut();
             initLoginFragment();
         }
+
+        @Override
+        public void actionCallChatActivity(String idUser, String idGroup) {
+            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+            intent.putExtra(Contact.KEY_CURRENT_ID, idUser);
+            intent.putExtra(Contact.KEY_GROUP_ID, idGroup);
+            startActivity(intent);
+        }
     };
 
     @Override
@@ -87,8 +97,6 @@ public class MainActivity extends AppCompatActivity {
             DatabaseReference data = FirebaseDatabase.getInstance().getReference();
             data.child("Users").child(currentUserId).child("status").setValue("online");
         }
-
-        //initLoginFragment();
 
 
     }

@@ -20,8 +20,15 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
     private final ArrayList<Group> mArrGroupChat = new ArrayList<>();
     private final HashMap<String, Message> mHashMapMessage = new HashMap<>();
     private Context mContext;
+    private ItemGroupChatClick mItemGroupChatClick;
 
-    public GroupChatAdapter(ArrayList<Group> arrGroupChat, HashMap<String, Message> hashMapMessage) {
+
+    public interface ItemGroupChatClick{
+        void onGroupClick(int position);
+    }
+
+    public GroupChatAdapter(ArrayList<Group> arrGroupChat, HashMap<String, Message> hashMapMessage, ItemGroupChatClick itemGroupChatClick) {
+        mItemGroupChatClick = itemGroupChatClick;
         if (arrGroupChat != null) {
             mArrGroupChat.addAll(arrGroupChat);
         }
@@ -61,6 +68,13 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
             mTxtContentMessage = itemView.findViewById(R.id.txtContentMessage);
             mTxtTimeMessage = itemView.findViewById(R.id.txtTimeMessage);
             mTxtNameGroup = itemView.findViewById(R.id.txtGroupName);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mItemGroupChatClick.onGroupClick(getAdapterPosition());
+                }
+            });
         }
 
         private void setData(Group group) {

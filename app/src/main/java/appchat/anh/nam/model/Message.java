@@ -1,11 +1,12 @@
 package appchat.anh.nam.model;
 
 public class Message {
+    private String linkImg;
+    private long time;
+    private String message;
     private String contentType;
     private String fromId;
-    private String linkImg;
-    private String message;
-    private long time;
+
 
     public Message() {
     }
@@ -16,6 +17,14 @@ public class Message {
         this.linkImg = linkImg;
         this.message = message;
         this.time = time;
+    }
+
+    public Message(String linkImg, long time, String message, String contentType, String fromId) {
+        this.linkImg = linkImg;
+        this.time = time;
+        this.message = message;
+        this.contentType = contentType;
+        this.fromId = fromId;
     }
 
     public String getContentType() {
