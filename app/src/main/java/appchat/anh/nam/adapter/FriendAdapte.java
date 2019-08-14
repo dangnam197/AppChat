@@ -86,4 +86,12 @@ public class FriendAdapte extends RecyclerView.Adapter<FriendAdapte.ViewHolder> 
             Log.d("FriendFragment", "addUser: "+mListUser.size());
         }
     }
+    public void addAllUser(ArrayList<User> listUser){
+        if(listUser!=null&&listUser.size()>0){
+            mListUser.clear();
+            mListUser.addAll(listUser);
+            notifyDataSetChanged();
+
+        }
+    }
 }
