@@ -75,7 +75,6 @@ public class FriendFragment extends Fragment {
         }
     };
     public FriendFragment() {
-
     }
 
     public static FriendFragment newInstance(String currentId) {

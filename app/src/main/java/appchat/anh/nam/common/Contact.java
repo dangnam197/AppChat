@@ -7,6 +7,14 @@ public class Contact {
     public static final String CONTENT_TYPE_TEXT="text";
     public static final String CONTENT_TYPE_IMG ="img";
     public static final String KEY_CURRENT_ID = "appchat.anh.nam.Common.CurrentID";
+    public static final String TABLE_USER = "Users";
+    public static final String TABLE_USER_DETAIL = "UserDetail";
+    public static final String TABLE_GROUP = "Groups";
+    public static final String TABLE_FRIEND ="Friends";
+    public static final String TABLE_GROUP_DETAIL = "GroupDetail";
+    public static final String TABLE_MEMBER_GROUP = "Members";
+    public static final String TABLE_RECENT_MESSAGE = "recentMessage";
+    public static final String TABLE_FRIENDS_GROUPS = "FriendsGroups";
     public static final String STATUS_ONLINE = "online";
     public static final String STATUS_OFFLINE = "offline";
 }

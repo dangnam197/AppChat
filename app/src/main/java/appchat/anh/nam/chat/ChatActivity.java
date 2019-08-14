@@ -2,6 +2,7 @@ package appchat.anh.nam.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import appchat.anh.nam.common.Contact;
 public class ChatActivity extends AppCompatActivity {
     private String groupId;
     private String userCurrentId;
+    private static final String TAG = "ketqua";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +27,8 @@ public class ChatActivity extends AppCompatActivity {
         Intent intent = getIntent();
         groupId = intent.getStringExtra(Contact.KEY_GROUP_ID);
         userCurrentId = intent.getStringExtra(Contact.KEY_CURRENT_ID);
+        Log.d(TAG, "initIntent: "+userCurrentId);
+        Log.d(TAG, "initIntent: "+groupId);
     }
 
     private void setFragmentChat() {

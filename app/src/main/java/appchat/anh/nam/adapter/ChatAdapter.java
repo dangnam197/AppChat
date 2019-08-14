@@ -113,7 +113,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
                         mTvMessage.setBackgroundResource(R.drawable.message_send_backgound);
                     }
-                }else {
+                }else if(messageBottom!=null){
                     if (message.getFromId().equals(messageBottom.getFromId())) {
 
                         mTvMessage.setBackgroundResource(R.drawable.message_send_top_backgound);
@@ -190,7 +190,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                         mTvUserName.setVisibility(View.VISIBLE);
                         mTvMessage.setBackgroundResource(R.drawable.message_receive_background);
                     }
-                }else {
+                }else if(messageBottom!=null){
                     if (message.getFromId().equals(messageBottom.getFromId())) {
                         mUserPic.setVisibility(View.GONE);
                         mStatus.setVisibility(View.GONE);
