@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import appchat.anh.nam.R;
@@ -225,6 +227,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     public void addAllItem(ArrayList<Message> list) {
         if (list != null && list.size() > 0) {
             mListMessages.addAll(list);
+            sort();
             Log.d("ketqua", "onDataChange: " + list.size());
             Log.d("onClick", "addllItem: ");
             notifyDataSetChanged();
@@ -255,7 +258,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             notifyDataSetChanged();
         }
     }
+    public void sort(){
+        Collections.sort(mListMessages, new Comparator<Message>() {
+            @Override
+            public int compare(Message o1, Message o2) {
+                if(o1.getTime()>o2.getTime()){
+                    return 1;
+                }
+                return -1;
+            }
+        });
 
+    }
     public ArrayList<Message> getListMessages() {
         return mListMessages;
     }

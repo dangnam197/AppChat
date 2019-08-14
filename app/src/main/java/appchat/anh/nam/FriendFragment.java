@@ -41,7 +41,9 @@ public class FriendFragment extends Fragment {
     private FriendAdapte mFriendAdapte;
 
     private DatabaseReference mReference ;
+
     private static final String TAG = "FriendFragment";
+
     private final View.OnClickListener mSearchFriendClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -71,7 +73,11 @@ public class FriendFragment extends Fragment {
     private final FriendAdapte.OnClickListener mItemFriendClick = new FriendAdapte.OnClickListener() {
         @Override
         public void addFriendClick(User user, int position) {
-
+            String id = mReference.child("FriendsGroups").child(mCurrentId).child("AddFriends").push().getKey();
+            mReference.child("FriendsGroups").child(mCurrentId).child("AddFriends").child(id).
+                    child("time").setValue(System.currentTimeMillis()/1000);
+            mReference.child("FriendsGroups").child(mCurrentId).child("AddFriends").child(id).
+                    child("userId").setValue(user.getId());
         }
     };
     public FriendFragment() {
