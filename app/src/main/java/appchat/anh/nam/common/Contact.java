@@ -4,6 +4,8 @@ public class Contact {
     public static final String KEY_GROUP_ID = "appchat.anh.nam.Common.GroupID";
     public static final int TYPE_CURRENT_USER = 1;
     public static final int TYPE_USER = 2;
+    public static final String CONTENT_TYPE_TEXT="text";
+    public static final String CONTENT_TYPE_IMG ="img";
     public static final String KEY_CURRENT_ID = "appchat.anh.nam.Common.CurrentID";
     public static final String STATUS_ONLINE = "online";
     public static final String STATUS_OFFLINE = "offline";

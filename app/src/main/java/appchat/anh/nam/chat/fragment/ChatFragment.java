@@ -43,19 +43,20 @@ public class ChatFragment extends Fragment {
     private ImageButton btnSendMessage;
     private EditText mEditChat;
     DatabaseReference mReference ;
-    private Message mMessage;
+
     private static final String TAG = "ketqua";
     private final View.OnClickListener sendMessageListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             String chat = mEditChat.getText().toString();
             if(!chat.equals("")){
-                mMessage.setMessage(chat);
-                mMessage.setTime(System.currentTimeMillis()/1000);
-                mChatAdapter.addItem(mMessage);
+                mEditChat.setText("");
+                Message message = new Message(Contact.CONTENT_TYPE_TEXT,mCurrentId,"",chat,System.currentTimeMillis()/1000);
+                mChatAdapter.addItem(message);
+                Log.d(TAG, "onClick: "+chat);
                 mRvChat.smoothScrollToPosition(mChatAdapter.getItemCount()-1);
-                mReference.child("GroupMessager").child(mGroupId).push().setValue(mMessage);
-                mReference.child("Groups").child(mGroupId).child("recentMessage").setValue(mMessage);
+                mReference.child("GroupMessager").child(mGroupId).push().setValue(message);
+                mReference.child("Groups").child(mGroupId).child("recentMessage").setValue(message);
             }
 
 
@@ -86,10 +87,6 @@ public class ChatFragment extends Fragment {
             mGroupId = getArguments().getString(Contact.KEY_GROUP_ID);
             mCurrentId = getArguments().getString(Contact.KEY_CURRENT_ID);
         }
-        mMessage = new Message();
-        mMessage.setFromId(mCurrentId);
-        mMessage.setLinkImg("");
-        mMessage.setContentType("text");
     }
 
     @Override
@@ -187,7 +184,7 @@ public class ChatFragment extends Fragment {
         });
     }
     private void getUser(final String id){
-        mReference.child("Users").child(id).child("UserDetail").addValueEventListener(new ValueEventListener() {
+        mReference.child("Users").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);

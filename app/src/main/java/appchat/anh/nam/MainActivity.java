@@ -30,8 +30,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        final FirebaseDatabase database = FirebaseDatabase.getInstance();
 //        DatabaseReference myRef = database.getReference();
+//        myRef.child("Users").orderByKey().startAt("anh2").endAt("anh2"+"\uf8ff").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Log.d(TAG, "onDataChange: "+dataSnapshot.toString());
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 //        myRef.child("Groups").child("xxx").child("Members").addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -53,9 +64,15 @@ public class MainActivity extends AppCompatActivity {
 //        LoginFragment loginFragment = new LoginFragment();
 //        fragmentTransaction.replace(R.id.frame, loginFragment);
 //        fragmentTransaction.commit();
-        Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-        intent.putExtra(Contact.KEY_GROUP_ID,"xxx");
-        intent.putExtra(Contact.KEY_CURRENT_ID,"SAii3UQTFKaE403hEajkNIOz0dz2");
-        startActivity(intent);
+
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        LoginFragment loginFragment = new LoginFragment();
+        fragmentTransaction.replace(R.id.frame, FriendFragment.newInstance("ZWrllZVJsXeqOGY6SFgWlYZtAzb2"));
+        fragmentTransaction.commit();
+
+//        Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+//        intent.putExtra(Contact.KEY_GROUP_ID,"xxx");
+//        intent.putExtra(Contact.KEY_CURRENT_ID,"SAii3UQTFKaE403hEajkNIOz0dz2");
+//        startActivity(intent);
     }
 }

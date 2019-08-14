@@ -226,6 +226,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         if (list != null && list.size() > 0) {
             mListMessages.addAll(list);
             Log.d("ketqua", "onDataChange: " + list.size());
+            Log.d("onClick", "addllItem: ");
             notifyDataSetChanged();
         }
     }
@@ -234,6 +235,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 //        if(message!=null){
 //            if(message.getFromId()==)
 //        }
+        Log.d("onClick", "addItem: ");
         mListMessages.add(message);
         notifyDataSetChanged();
     }
