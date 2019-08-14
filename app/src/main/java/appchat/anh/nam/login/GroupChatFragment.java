@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import appchat.anh.nam.FriendFragment;
+import appchat.anh.nam.FriendRequestFragment;
 import appchat.anh.nam.R;
 import appchat.anh.nam.adapter.GroupFriendPagerAdapter;
 import appchat.anh.nam.common.Contact;
@@ -127,11 +128,14 @@ public class GroupChatFragment extends Fragment {
         GroupFragment groupFragment = GroupFragment.newInstance(mIdUser);
         groupFragment.setInterface(mCallBackGroupChatFragment);
         FriendFragment friendFragment = FriendFragment.newInstance(mIdUser);
+        FriendRequestFragment friendRequestFragment = FriendRequestFragment.newInstance(mIdUser);
         mPagerAdapter.addFragment(groupFragment);
         mPagerAdapter.addFragment(friendFragment);
+        mPagerAdapter.addFragment(friendRequestFragment);
         mViewPager.setAdapter(mPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.getTabAt(0).setIcon(R.drawable.group);
         mTabLayout.getTabAt(1).setIcon(R.drawable.search);
+        mTabLayout.getTabAt(2).setIcon(R.drawable.user);
     }
 }
