@@ -7,6 +7,9 @@ public class Message {
     private String message;
     private long time;
 
+    public Message() {
+    }
+
     public Message(String contentType, String fromId, String linkImg, String message, long time) {
         this.contentType = contentType;
         this.fromId = fromId;

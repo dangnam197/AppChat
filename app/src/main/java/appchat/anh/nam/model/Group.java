@@ -1,7 +1,7 @@
 package appchat.anh.nam.model;
 
 public class Group {
-    private String createAt;
+    private long createAt;
     private String groupIcon;
     private String id;
     private String name;
@@ -9,7 +9,7 @@ public class Group {
     public Group() {
     }
 
-    public Group(String createAt, String groupIcon, String id, String name) {
+    public Group(long createAt, String groupIcon, String id, String name) {
         this.createAt = createAt;
         this.groupIcon = groupIcon;
         this.id = id;
@@ -24,11 +24,11 @@ public class Group {
         this.id = id;
     }
 
-    public String getCreateAt() {
+    public long getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(String createAt) {
+    public void setCreateAt(long createAt) {
         this.createAt = createAt;
     }
 

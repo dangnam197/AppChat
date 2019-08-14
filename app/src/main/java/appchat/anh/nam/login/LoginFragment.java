@@ -1,7 +1,6 @@
 package appchat.anh.nam.login;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import appchat.anh.nam.R;
+import appchat.anh.nam.model.User;
 
 
 /**
@@ -30,15 +30,43 @@ import appchat.anh.nam.R;
  */
 public class LoginFragment extends Fragment {
 
-    private EditText edtEmail, edtPassword;
-    private Button btnLogin, btnRegister;
-    private FirebaseAuth firebaseAuth;
-    private FragmentTransaction fragmentTransaction;
-    private View view;
+    private EditText mEdtEmail, mEdtPassword;
+    private Button mBtnLogin, mBtnRegister;
+    private FirebaseAuth mFireBaseAuth;
+    private FragmentTransaction mFragmentTransaction;
     private DatabaseReference mDatabaseReference;
+    private LoginFragmentInterface mLoginFragmentInterface;
+
+    private final View.OnClickListener mBtnLoginClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            login();
+        }
+    };
+
+    private final View.OnClickListener mBtnRegisterClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mLoginFragmentInterface.onBtnRegisterClick();
+        }
+    };
+
+
+    public interface LoginFragmentInterface {
+        void onBtnRegisterClick();
+
+        void onLoginSuccess(User user);
+
+        void onLoginFall();
+    }
+
 
     public LoginFragment() {
         // Required empty public constructor
+    }
+
+    public void setInterface(LoginFragmentInterface buttonRegisterClickInterface) {
+        mLoginFragmentInterface = buttonRegisterClickInterface;
     }
 
 
@@ -46,63 +74,51 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_login, container, false);
-        Init();
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        initView(view);
+        initFireBase();
+        initAction();
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Login();
-            }
-        });
-
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment registerFragment = new RegisterFragment();
-                fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.frame, registerFragment);
-                fragmentTransaction.commit();
-            }
-        });
         return view;
     }
 
 
-    private void Init(){
-        edtEmail = view.findViewById(R.id.edtEmail);
-        edtPassword = view.findViewById(R.id.edtPass);
-        btnLogin = view.findViewById(R.id.btnLogin);
-        btnRegister = view.findViewById(R.id.btnRegister);
+    private void initView(View view) {
+        mEdtEmail = view.findViewById(R.id.edtEmail);
+        mEdtPassword = view.findViewById(R.id.edtPass);
+        mBtnLogin = view.findViewById(R.id.btnLogin);
+        mBtnRegister = view.findViewById(R.id.btnRegister);
     }
 
-    private void Login(){
+    private void initFireBase() {
+        mFireBaseAuth = FirebaseAuth.getInstance();
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+    }
+
+    private void initAction() {
+        mBtnLogin.setOnClickListener(mBtnLoginClick);
+        mBtnRegister.setOnClickListener(mBtnRegisterClick);
+    }
+
+    private void login() {
         String email, password;
-        email = edtEmail.getText().toString();
-        password = edtPassword.getText().toString();
+        email = mEdtEmail.getText().toString();
+        password = mEdtPassword.getText().toString();
 
-        if(email.equals("") || password.equals("")){
+        if (email.equals("") || password.equals("")) {
             Toast.makeText(getActivity(), "Vui lòng nhập đẩy đủ thông tin", Toast.LENGTH_SHORT).show();
-        }
-
-        else{
-            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+        } else {
+            mFireBaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful()){
-                        Toast.makeText(getActivity(), "Login Successfull", Toast.LENGTH_SHORT).show();
+                    if (task.isSuccessful()) {
                         FirebaseUser currentUser = task.getResult().getUser();
-                        mDatabaseReference.child("users").child(currentUser.getUid()).child("status").setValue("Online");
-                        getActivity().finish();
-                        Toast.makeText(getActivity(), "login success", Toast.LENGTH_SHORT).show();
-                        //Intent intent = new Intent(getActivity(), InforActivity.class);
-                        //startActivity(intent);
-                    }
-                    else{
-                        Toast.makeText(getActivity(), "Login fall!!!", Toast.LENGTH_SHORT).show();
+                        mDatabaseReference.child("Users").child(currentUser.getUid()).child("status").setValue("online");
+                        User user = new User(currentUser.getDisplayName(), currentUser.getUid(), String.valueOf(currentUser.getPhotoUrl()), "online");
+                        mLoginFragmentInterface.onLoginSuccess(user);
+                    } else {
+                        mLoginFragmentInterface.onLoginFall();
                     }
                 }
             });
@@ -110,8 +126,4 @@ public class LoginFragment extends Fragment {
 
 
     }
-
-
-
-
 }
