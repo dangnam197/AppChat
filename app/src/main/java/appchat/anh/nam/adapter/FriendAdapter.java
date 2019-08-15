@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import appchat.anh.nam.R;
 import appchat.anh.nam.model.User;
 
-public class FriendAdapte extends RecyclerView.Adapter<FriendAdapte.ViewHolder> {
+public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder> {
     public interface OnClickListener{
         void addFriendClick(User user,int position);
     }
@@ -27,7 +27,7 @@ public class FriendAdapte extends RecyclerView.Adapter<FriendAdapte.ViewHolder> 
     private final ArrayList<User> mListUser = new ArrayList<>();
     private OnClickListener mOnClickListener;
 
-    public FriendAdapte(ArrayList<User> listUser,OnClickListener onClickListener) {
+    public FriendAdapter(ArrayList<User> listUser, OnClickListener onClickListener) {
         if(listUser!=null&&listUser.size()>0){
             mListUser.addAll(listUser);
         }
@@ -63,6 +63,7 @@ public class FriendAdapte extends RecyclerView.Adapter<FriendAdapte.ViewHolder> 
             public void onClick(View v) {
                 if(mOnClickListener!=null){
                     mOnClickListener.addFriendClick(mListUser.get(getAdapterPosition()),getAdapterPosition());
+                    mBtnAddFriend.setVisibility(View.GONE);
                 }
             }
         };

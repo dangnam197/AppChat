@@ -2,4 +2,7 @@
 <resources>
     <dimen name="radius">15dp</dimen>
     <dimen name="radius_small">5dp</dimen>
+    <dimen name="edit_text_padding_left_right">15dp</dimen>
+    <dimen name="item_chat_padding_top_bottom">8dp</dimen>
+    <dimen name="item_chat_padding_start_end">15dp</dimen>
 </resources>

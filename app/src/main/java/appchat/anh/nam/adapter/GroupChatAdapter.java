@@ -88,9 +88,11 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
                 Glide.with(mContext).load(group.getGroupIcon()).placeholder(R.drawable.default_user).into(mImageAvatar);
             }
             mTxtNameGroup.setText(group.getName());
-            mTxtContentMessage.setText(mHashMapMessage.get(group.getId()).getMessage());
-            mTxtTimeMessage.setText(convertTime((mHashMapMessage.get(group.getId()).getTime())));
-            Log.d("ketqua", "setData: "+mHashMapMessage.get(group.getId()).getTime());
+            if(mHashMapMessage.get(group.getId())!=null) {
+                mTxtContentMessage.setText(mHashMapMessage.get(group.getId()).getMessage());
+                mTxtTimeMessage.setText(convertTime((mHashMapMessage.get(group.getId()).getTime())));
+                Log.d("ketqua", "setData: " + mHashMapMessage.get(group.getId()).getTime());
+            }
         }
     }
 
@@ -110,13 +112,15 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
     }
 
     public void updateRecentMessage(String idGroup, Message message) {
-        mHashMapMessage.put(idGroup, message);
-        mHashMapMessage.get(idGroup).setMessage(message.getMessage());
-        mHashMapMessage.get(idGroup).setTime(message.getTime());
-        if (message.getContentType().equals("image")) {
-            mHashMapMessage.get(idGroup).setMessage("Đã nhận một hình ảnh");
+        if(message!=null) {
+            mHashMapMessage.put(idGroup, message);
+            mHashMapMessage.get(idGroup).setMessage(message.getMessage());
+            mHashMapMessage.get(idGroup).setTime(message.getTime());
+            if (message.getContentType().equals("image")) {
+                mHashMapMessage.get(idGroup).setMessage("Đã nhận một hình ảnh");
+            }
+            notifyDataSetChanged();
         }
-        notifyDataSetChanged();
     }
 
     private String convertTime(long time){

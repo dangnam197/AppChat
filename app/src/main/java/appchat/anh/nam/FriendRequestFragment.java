@@ -12,8 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,11 +20,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import appchat.anh.nam.adapter.FriendAdapte;
 import appchat.anh.nam.adapter.FriendRequestAdapter;
 import appchat.anh.nam.common.Contact;
+import appchat.anh.nam.model.Group;
 import appchat.anh.nam.model.User;
 
 
@@ -41,7 +38,6 @@ public class FriendRequestFragment extends Fragment {
 
     private DatabaseReference mReference ;
 
-    private final HashMap<String,String> mListKey = new HashMap<>();
 
     private static final String TAG = "FriendFragment";
 
@@ -50,15 +46,31 @@ public class FriendRequestFragment extends Fragment {
         @Override
         public void acceptFriendClick(User user, int position) {
             Log.d(TAG, "acceptFriendClick: "+user.getId());
-            mReference.child("FriendsGroups").child(mCurrentId).child("Friends").push().setValue(user.getId());
+            long currenTime = System.currentTimeMillis()/1000;
+            //
+            mReference.child("FriendsGroups").child(mCurrentId).child("Friends").child(user.getId()).child("userId").setValue(user.getId());
+            mReference.child("FriendsGroups").child(mCurrentId).child("Friends").child(user.getId()).child("time").setValue(currenTime);
+
+            //
+            mReference.child("FriendsGroups").child(user.getId()).child("Friends").child(mCurrentId).child("userId").setValue(mCurrentId);
+            mReference.child("FriendsGroups").child(user.getId()).child("Friends").child(mCurrentId).child("time").setValue(currenTime);
+
+            //remove friend request
+            mReference.child("FriendsGroups").child(mCurrentId).child("AddFriends").child(user.getId()).removeValue();
+            String groupId = mReference.child("Groups").push().getKey();
+            Group group = new Group(currenTime,"",groupId,"nhom chat cua"+user.getFullName());
+
+           //add group
+            mReference.child("Groups").child(groupId).child("GroupDetail").setValue(group);
+            mReference.child("Groups").child(groupId).child("Members").push().setValue(mCurrentId);
+            mReference.child("Groups").child(groupId).child("Members").push().setValue(user.getId());
+            mReference.child("FriendsGroups").child(mCurrentId).child("Groups").push().setValue(groupId);
+            mReference.child("FriendsGroups").child(user.getId()).child("Groups").push().setValue(groupId);
         }
 
         @Override
         public void refuseFriendClick(User user, int position) {
-            String id = mListKey.get(user.getId());
-            if(id!=null) {
-                mReference.child("FriendsGroups").child(mCurrentId).child("Friends").child("AddFriends").child(id).removeValue();
-            }
+            mReference.child("FriendsGroups").child(mCurrentId).child("AddFriends").child(user.getId()).removeValue();
         }
     };
     public FriendRequestFragment() {
@@ -95,7 +107,7 @@ public class FriendRequestFragment extends Fragment {
     }
 
     private void initData() {
-        mReference.child("FriendsGroups").child(mCurrentId).child("AddFriends").addListenerForSingleValueEvent(new ValueEventListener() {
+        mReference.child("FriendsGroups").child(mCurrentId).child("AddFriends").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
@@ -134,7 +146,7 @@ public class FriendRequestFragment extends Fragment {
 
     }
 
-    private void getUser(final String id){
+    private void getUser(String id){
         if(id!=null) {
             mReference.child("Users").child(id).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -142,7 +154,6 @@ public class FriendRequestFragment extends Fragment {
                     User user = dataSnapshot.getValue(User.class);
                     if(user!=null) {
                         mFriendRequestAdapter.addUser(user);
-                        mListKey.put(user.getId(),id);
                     }
 
                 }
