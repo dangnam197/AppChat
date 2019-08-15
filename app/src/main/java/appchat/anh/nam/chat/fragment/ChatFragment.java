@@ -25,6 +25,7 @@ import java.util.Objects;
 import appchat.anh.nam.R;
 import appchat.anh.nam.adapter.ChatAdapter;
 import appchat.anh.nam.common.Contact;
+import appchat.anh.nam.model.Group;
 import appchat.anh.nam.model.Message;
 import appchat.anh.nam.model.User;
 
@@ -37,6 +38,7 @@ public class ChatFragment extends Fragment {
     private ImageButton btnSendMessage;
     private EditText mEditChat;
     private DatabaseReference mReference ;
+    private Group mGroup;
 
     private final View.OnClickListener sendMessageListener = new View.OnClickListener() {
         @Override
@@ -60,10 +62,10 @@ public class ChatFragment extends Fragment {
     }
 
 
-    public static ChatFragment newInstance(String groupId,String currentId) {
+    public static ChatFragment newInstance(Group group, String currentId) {
         ChatFragment fragment = new ChatFragment();
         Bundle args = new Bundle();
-        args.putString(Contact.KEY_GROUP_ID, groupId);
+        args.putParcelable(Contact.KEY_GROUP, group);
         args.putString(Contact.KEY_CURRENT_ID,currentId);
         fragment.setArguments(args);
         return fragment;
@@ -76,8 +78,9 @@ public class ChatFragment extends Fragment {
         mReference = firebaseDatabase.getReference();
 
         if (getArguments() != null) {
-            mGroupId = getArguments().getString(Contact.KEY_GROUP_ID);
+            mGroup = getArguments().getParcelable(Contact.KEY_GROUP);
             mCurrentId = getArguments().getString(Contact.KEY_CURRENT_ID);
+            mGroupId= mGroup.getId();
         }
     }
 

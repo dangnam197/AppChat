@@ -3,7 +3,6 @@ package appchat.anh.nam;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -20,12 +19,14 @@ import appchat.anh.nam.common.Contact;
 import appchat.anh.nam.login.GroupChatFragment;
 import appchat.anh.nam.login.LoginFragment;
 import appchat.anh.nam.login.RegisterFragment;
+import appchat.anh.nam.model.Group;
 import appchat.anh.nam.model.User;
 
 public class MainActivity extends AppCompatActivity {
 
     private FragmentTransaction mFragmentTransaction;
     private FirebaseAuth mFireBaseAuth;
+    private DatabaseReference mData = FirebaseDatabase.getInstance().getReference();
 
     private RegisterFragment.ActionRegisterInterface mActionRegisterInterface = new RegisterFragment.ActionRegisterInterface() {
         @Override
@@ -74,10 +75,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void actionCallChatActivity(String idUser, String idGroup) {
+        public void actionCallChatActivity(String idUser, Group group) {
             Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-            intent.putExtra(Contact.KEY_CURRENT_ID, idUser);
-            intent.putExtra(Contact.KEY_GROUP_ID, idGroup);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(Contact.KEY_GROUP, group);
+            bundle.putString(Contact.KEY_CURRENT_ID, idUser);
+            intent.putExtras(bundle);
             startActivity(intent);
         }
     };
@@ -96,6 +99,15 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             initLoginFragment();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        User user = checkUser();
+        if(user!=null){
+            mData.child(Contact.TABLE_USER).child(user.getId()).child("status").setValue("online");
         }
     }
 
@@ -142,8 +154,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onStop() {
+        User user = checkUser();
+        if(user!=null){
+            mData.child(Contact.TABLE_USER).child(user.getId()).child("status").setValue("offline");
+        }
+        super.onStop();
+    }
 
+    @Override
+    protected void onDestroy() {
         super.onDestroy();
     }
 }

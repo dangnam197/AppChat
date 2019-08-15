@@ -30,7 +30,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
 
 
     public interface ItemGroupChatClick{
-        void onGroupClick(int position);
+        void onGroupClick(Group group);
     }
 
     public GroupChatAdapter(ArrayList<Group> arrGroupChat, HashMap<String, Message> hashMapMessage, ItemGroupChatClick itemGroupChatClick) {
@@ -78,7 +78,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mItemGroupChatClick.onGroupClick(getAdapterPosition());
+                    mItemGroupChatClick.onGroupClick(mArrGroupChat.get(getAdapterPosition()));
                 }
             });
         }

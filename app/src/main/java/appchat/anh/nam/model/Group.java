@@ -1,6 +1,9 @@
 package appchat.anh.nam.model;
 
-public class Group {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Group implements Parcelable {
     private long createAt;
     private String groupIcon;
     private String id;
@@ -15,6 +18,25 @@ public class Group {
         this.id = id;
         this.name = name;
     }
+
+    protected Group(Parcel in) {
+        createAt = in.readLong();
+        groupIcon = in.readString();
+        id = in.readString();
+        name = in.readString();
+    }
+
+    public static final Creator<Group> CREATOR = new Creator<Group>() {
+        @Override
+        public Group createFromParcel(Parcel in) {
+            return new Group(in);
+        }
+
+        @Override
+        public Group[] newArray(int size) {
+            return new Group[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -46,5 +68,18 @@ public class Group {
 
     public void setGroupIcon(String groupIcon) {
         this.groupIcon = groupIcon;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(createAt);
+        dest.writeString(groupIcon);
+        dest.writeString(id);
+        dest.writeString(name);
     }
 }
