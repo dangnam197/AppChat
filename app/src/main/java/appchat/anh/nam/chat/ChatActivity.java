@@ -18,6 +18,12 @@ public class ChatActivity extends AppCompatActivity {
     private String mUserCurrentId;
     private static final String TAG = "ketqua";
     private Group mCurrentGroup;
+    private final View.OnClickListener mBackClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            finish();
+        }
+    };
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +51,7 @@ public class ChatActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(mCurrentGroup.getName());
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(mBackClickListener);
 
     }
 
