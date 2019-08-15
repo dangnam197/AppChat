@@ -82,7 +82,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             if (position > 0) {
                 messageTop = mListMessages.get(position - 1);
             }
-            if (position < mListMessages.size() - 2) {
+            if (position < mListMessages.size() - 1) {
                 messageBottom = mListMessages.get(position + 1);
             }
             if (messageTop != null && messageBottom != null) {
@@ -155,7 +155,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             if (position > 0) {
                 messageTop = mListMessages.get(position - 1);
             }
-            if (position < mListMessages.size() - 2) {
+            if (position < mListMessages.size() - 1) {
                 messageBottom = mListMessages.get(position + 1);
             }
             if (messageTop != null && messageBottom != null) {
@@ -219,7 +219,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     abstract class ViewHolder extends RecyclerView.ViewHolder {
         abstract void bindViewHolder(Message message, int position);
 
-        public ViewHolder(@NonNull View itemView) {
+        private ViewHolder(@NonNull View itemView) {
             super(itemView);
         }
     }
@@ -243,10 +243,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void addAllUser(HashMap<String, User> userHashMap) {
-        mHashMapUsers.putAll(userHashMap);
-        // notifyDataSetChanged();
-    }
+//    public void addAllUser(HashMap<String, User> userHashMap) {
+//        mHashMapUsers.putAll(userHashMap);
+//        // notifyDataSetChanged();
+//    }
 
     public void addUser(String key, User user) {
         if (user != null) {
@@ -258,12 +258,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             notifyDataSetChanged();
         }
     }
-    public void sort(){
+    private void sort(){
         Collections.sort(mListMessages, new Comparator<Message>() {
             @Override
             public int compare(Message o1, Message o2) {
                 if(o1.getTime()>o2.getTime()){
                     return 1;
+                }else if (o1.getTime()==o2.getTime()){
+                    return 0;
                 }
                 return -1;
             }

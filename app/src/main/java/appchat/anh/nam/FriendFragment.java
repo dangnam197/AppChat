@@ -2,18 +2,16 @@ package appchat.anh.nam;
 
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import appchat.anh.nam.adapter.FriendAdapte;
+import appchat.anh.nam.adapter.FriendAdapter;
 import appchat.anh.nam.common.Contact;
 import appchat.anh.nam.model.User;
 
@@ -38,11 +36,10 @@ public class FriendFragment extends Fragment {
     
     private ImageButton mBtnSearchFriend;
 
-    private FriendAdapte mFriendAdapte;
+    private FriendAdapter mFriendAdapter;
 
     private DatabaseReference mReference ;
 
-    private static final String TAG = "FriendFragment";
 
     private final View.OnClickListener mSearchFriendClick = new View.OnClickListener() {
         @Override
@@ -55,13 +52,12 @@ public class FriendFragment extends Fragment {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
                     User user = snapshot.getValue(User.class);
-                    Log.d(TAG, "onDataChange: "+user.getFullName());
                     if(user!=null){
                         list.add(user);
                     }
                 }
                 if(list.size()>0){
-                    mFriendAdapte.addAllUser(list);
+                    mFriendAdapter.addAllUser(list);
                 }
             }
 
@@ -73,14 +69,13 @@ public class FriendFragment extends Fragment {
 
         }
     };
-    private final FriendAdapte.OnClickListener mItemFriendClick = new FriendAdapte.OnClickListener() {
+    private final FriendAdapter.OnClickListener mItemFriendClick = new FriendAdapter.OnClickListener() {
         @Override
         public void addFriendClick(User user, int position) {
-            String id = mReference.child("FriendsGroups").child(mCurrentId).child("AddFriends").push().getKey();
-            mReference.child("FriendsGroups").child(mCurrentId).child("AddFriends").child(id).
+            mReference.child("FriendsGroups").child(user.getId()).child("AddFriends").child(mCurrentId).
                     child("time").setValue(System.currentTimeMillis()/1000);
-            mReference.child("FriendsGroups").child(mCurrentId).child("AddFriends").child(id).
-                    child("userId").setValue(user.getId());
+            mReference.child("FriendsGroups").child(user.getId()).child("AddFriends").child(mCurrentId).
+                    child("userId").setValue(mCurrentId);
         }
     };
     public FriendFragment() {
@@ -105,7 +100,7 @@ public class FriendFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
@@ -118,8 +113,8 @@ public class FriendFragment extends Fragment {
     private void initRvFriend() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         mRvFriend.setLayoutManager (linearLayoutManager);
-        mFriendAdapte = new FriendAdapte(new ArrayList<User>(),mItemFriendClick);
-        mRvFriend.setAdapter(mFriendAdapte);
+        mFriendAdapter = new FriendAdapter(new ArrayList<User>(),mItemFriendClick);
+        mRvFriend.setAdapter(mFriendAdapter);
 
     }
 
@@ -133,21 +128,21 @@ public class FriendFragment extends Fragment {
         mBtnSearchFriend = view.findViewById(R.id.btn_search_friend);
     }
 
-    private void getUser(String id){
-        mReference.child("Users").child(id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                mFriendAdapte.addUser(user);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
+//    private void getUser(String id){
+//        mReference.child("Users").child(id).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                User user = dataSnapshot.getValue(User.class);
+//                mFriendAdapter.addUser(user);
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
 
 }
