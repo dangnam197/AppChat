@@ -17,4 +17,6 @@ public class Contact {
     public static final String TABLE_FRIENDS_GROUPS = "FriendsGroups";
     public static final String STATUS_ONLINE = "online";
     public static final String STATUS_OFFLINE = "offline";
+    public static final String KEY_CURRENT_USER_NAME="appchat.anh.nam.Common.CurrentUserName";
+    public static final String KEY_CURRENT_USER = "appchat.anh.nam.Common.CurrentUser";
 }

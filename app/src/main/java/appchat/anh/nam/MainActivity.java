@@ -26,18 +26,19 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private FragmentTransaction mFragmentTransaction;
     private FirebaseAuth mFireBaseAuth;
-    private DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+    private User mUser;
 
     private RegisterFragment.ActionRegisterInterface mActionRegisterInterface = new RegisterFragment.ActionRegisterInterface() {
         @Override
         public void registerSuccess() {
-            String currentUserId = checkUser();
-            if(currentUserId.equals("NoUser")){
-                initLoginFragment();
+            User user = checkUser();
+            if(user!=null){
+                initGroupChatFragment(user);
+                DatabaseReference data = FirebaseDatabase.getInstance().getReference();
+                data.child("Users").child(user.getId()).child("status").setValue("online");
             }
             else{
-                initGroupChatFragment(currentUserId);
-                mDatabaseReference.child(Contact.TABLE_USER).child(currentUserId).child("status").setValue("online");
+                initLoginFragment();
             }
         }
 
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onLoginSuccess(User user) {
-            initGroupChatFragment(user.getId());
+            initGroupChatFragment(user);
         }
 
         @Override
@@ -87,37 +88,38 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String currentUserId = checkUser();
-        Log.d(TAG, "onCreate: "+checkUser());
-        if(currentUserId.equals("NoUser")){
-            initLoginFragment();
+        User user = checkUser();
+        if(user!=null){
+            initGroupChatFragment(user);
+            DatabaseReference data = FirebaseDatabase.getInstance().getReference();
+            data.child("Users").child(user.getId()).child("status").setValue("online");
         }
         else{
-            initGroupChatFragment(currentUserId);
-            DatabaseReference data = FirebaseDatabase.getInstance().getReference();
-            data.child("Users").child(currentUserId).child("status").setValue("online");
+            initLoginFragment();
         }
-
-
     }
 
-    private String checkUser(){
+    private User checkUser(){
+        User user = new User();
         mFireBaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mFireBaseAuth.getCurrentUser();
         if(currentUser!=null){
-            Log.d(TAG, "checkUser: đã đăng nhập");
-            return currentUser.getUid();
+            user.setId(currentUser.getUid());
+            user.setFullName(currentUser.getDisplayName());
+            user.setProfilePic(String.valueOf(currentUser.getPhotoUrl()));
+            user.setStatus("online");
+            return user;
         }
-        Log.d(TAG, "checkUser: chưa đăng nhập");
-        return "NoUser";
+
+        return null;
     }
 
-    private void initGroupChatFragment(String userId){
+    private void initGroupChatFragment(User user){
         mFragmentTransaction = getSupportFragmentManager().beginTransaction();
         GroupChatFragment groupChatFragment = new GroupChatFragment();
         groupChatFragment.setInterface(mCallBack);
         Bundle bundle = new Bundle();
-        bundle.putString(Contact.KEY_CURRENT_ID, userId);
+        bundle.putParcelable(Contact.KEY_CURRENT_USER, user);
         groupChatFragment.setArguments(bundle);
         mFragmentTransaction.replace(R.id.frame, groupChatFragment);
         mFragmentTransaction.commit();

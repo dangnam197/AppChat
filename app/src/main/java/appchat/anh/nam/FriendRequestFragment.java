@@ -41,7 +41,7 @@ public class FriendRequestFragment extends Fragment {
 
     private static final String TAG = "FriendFragment";
 
-
+    private String mCurrrentUserName;
     private final FriendRequestAdapter.OnClickListener mItemFriendClick = new FriendRequestAdapter.OnClickListener() {
         @Override
         public void acceptFriendClick(User user, int position) {
@@ -58,7 +58,7 @@ public class FriendRequestFragment extends Fragment {
             //remove friend request
             mReference.child("FriendsGroups").child(mCurrentId).child("AddFriends").child(user.getId()).removeValue();
             String groupId = mReference.child("Groups").push().getKey();
-            Group group = new Group(currenTime,"",groupId,"nhom chat cua"+user.getFullName());
+            Group group = new Group(currenTime,"",groupId,mCurrrentUserName+","+user.getFullName());
 
            //add group
             mReference.child("Groups").child(groupId).child("GroupDetail").setValue(group);
@@ -76,10 +76,11 @@ public class FriendRequestFragment extends Fragment {
     public FriendRequestFragment() {
     }
 
-    public static FriendRequestFragment newInstance(String currentId) {
+    public static FriendRequestFragment newInstance(String currentId, String currentUserName) {
         FriendRequestFragment fragment = new FriendRequestFragment();
         Bundle args = new Bundle();
         args.putString(Contact.KEY_CURRENT_ID, currentId);
+        args.putString(Contact.KEY_CURRENT_USER_NAME, currentUserName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -91,6 +92,7 @@ public class FriendRequestFragment extends Fragment {
         mReference = firebaseDatabase.getReference();
         if (getArguments() != null) {
             mCurrentId = getArguments().getString(Contact.KEY_CURRENT_ID);
+            mCurrrentUserName = getArguments().getString(Contact.KEY_CURRENT_USER_NAME);
         }
     }
 
