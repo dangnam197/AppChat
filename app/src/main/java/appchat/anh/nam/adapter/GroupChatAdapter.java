@@ -30,7 +30,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
 
 
     public interface ItemGroupChatClick{
-        void onGroupClick(int position);
+        void onGroupClick(Group group);
     }
 
     public GroupChatAdapter(ArrayList<Group> arrGroupChat, HashMap<String, Message> hashMapMessage, ItemGroupChatClick itemGroupChatClick) {
@@ -78,7 +78,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mItemGroupChatClick.onGroupClick(getAdapterPosition());
+                    mItemGroupChatClick.onGroupClick(mArrGroupChat.get(getAdapterPosition()));
                 }
             });
         }
@@ -91,7 +91,6 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
             if(mHashMapMessage.get(group.getId())!=null) {
                 mTxtContentMessage.setText(mHashMapMessage.get(group.getId()).getMessage());
                 mTxtTimeMessage.setText(convertTime((mHashMapMessage.get(group.getId()).getTime())));
-                Log.d("ketqua", "setData: " + mHashMapMessage.get(group.getId()).getTime());
             }
         }
     }
@@ -102,8 +101,8 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
             if(group1.getId().equals(group.getId())){
                 group1.setId(group.getId());
                 check = false;
+                break;
             }
-            break;
         }
         if(check){
             mArrGroupChat.add(group);
@@ -125,7 +124,6 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
 
     private String convertTime(long time){
         long differentTime = System.currentTimeMillis()/1000-time;
-        Log.d("ketqua", "convertTime: "+differentTime);
         if(differentTime>86400){
             Date date = new Date(time*1000);
             SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMM");

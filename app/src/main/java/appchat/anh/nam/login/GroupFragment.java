@@ -42,8 +42,8 @@ public class GroupFragment extends Fragment {
     private CallBackGroupChatFragment mCallBackGroupChatFragment;
     private GroupChatAdapter.ItemGroupChatClick mItemGroupChatClick = new GroupChatAdapter.ItemGroupChatClick() {
         @Override
-        public void onGroupClick(int position) {
-            mCallBackGroupChatFragment.onItemGroupClick(mIdUser, mArrIdGroup.get(position));
+        public void onGroupClick(Group group) {
+            mCallBackGroupChatFragment.onItemGroupClick(mIdUser, group);
         }
     };
     private final GroupChatAdapter mGroupChatAdapter = new GroupChatAdapter(new ArrayList<Group>(), new HashMap<String, Message>(), mItemGroupChatClick);
@@ -54,7 +54,7 @@ public class GroupFragment extends Fragment {
     }
 
     public interface CallBackGroupChatFragment{
-        void onItemGroupClick(String idUser, String idGroup);
+        void onItemGroupClick(String idUser, Group group);
     }
 
     public void setInterface(CallBackGroupChatFragment callBackGroupChatFragment){
