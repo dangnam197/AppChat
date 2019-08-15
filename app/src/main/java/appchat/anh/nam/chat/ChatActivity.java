@@ -22,15 +22,15 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        initToolbar();
         initIntent();
+        initToolbar();
         setFragmentChat();
     }
 
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.chat_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setTitle(mCurrentGroup.getName());
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
 
@@ -45,7 +45,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void setFragmentChat() {
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_chat,ChatFragment.newInstance(groupId,userCurrentId)).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_chat,ChatFragment.newInstance(mCurrentGroup,userCurrentId)).commit();
 
     }
 }
