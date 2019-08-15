@@ -32,6 +32,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setFragmentChat() {
-        getSupportFragmentManager().beginTransaction().add(R.id.frame_chat,ChatFragment.newInstance(groupId,userCurrentId)).addToBackStack("").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_chat,ChatFragment.newInstance(groupId,userCurrentId)).commit();
     }
 }

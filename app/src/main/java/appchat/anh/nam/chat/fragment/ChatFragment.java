@@ -155,7 +155,7 @@ public class ChatFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Message message = dataSnapshot.getValue(Message.class);
                     if (message != null) {
-                        if (message.getFromId().equals(mCurrentId)) {
+                        if (!message.getFromId().equals(mCurrentId)) {
                             mChatAdapter.addItem(message);
                             mRvChat.post(new Runnable() {
                                 @Override

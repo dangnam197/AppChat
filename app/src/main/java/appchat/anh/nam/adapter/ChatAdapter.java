@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Objects;
 
 import appchat.anh.nam.R;
 import appchat.anh.nam.common.Contact;
@@ -142,13 +143,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         public void bindViewHolder(Message message, int position) {
             mTvMessage.setText(message.getMessage());
             if (mHashMapUsers.get(message.getFromId()) != null) {
-                mTvUserName.setText(mHashMapUsers.get(message.getFromId()).getFullName());
-                if (Contact.STATUS_ONLINE.equals(mHashMapUsers.get(message.getFromId()).getStatus())) {
+                mTvUserName.setText(Objects.requireNonNull(mHashMapUsers.get(message.getFromId())).getFullName());
+                if (Contact.STATUS_ONLINE.equals(Objects.requireNonNull(mHashMapUsers.get(message.getFromId())).getStatus())) {
                     Glide.with(mContext).load(R.drawable.status_online).into(mStatus);
                 } else {
                     Glide.with(mContext).load(R.drawable.status_offline).into(mStatus);
                 }
-                Glide.with(mContext).load(mHashMapUsers.get(message.getFromId()).getProfilePic()).into(mUserPic);
+                Glide.with(mContext).load(Objects.requireNonNull(mHashMapUsers.get(message.getFromId())).getProfilePic()).into(mUserPic);
             }
             Message messageTop = null;
             Message messageBottom = null;
@@ -192,7 +193,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                         mTvUserName.setVisibility(View.VISIBLE);
                         mTvMessage.setBackgroundResource(R.drawable.message_receive_background);
                     }
-                }else if(messageBottom!=null){
+                }else {
+                    mTvUserName.setVisibility(View.VISIBLE);
+                }
+
+                if(messageBottom!=null){
                     if (message.getFromId().equals(messageBottom.getFromId())) {
                         mUserPic.setVisibility(View.GONE);
                         mStatus.setVisibility(View.GONE);
@@ -202,6 +207,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                         mStatus.setVisibility(View.VISIBLE);
                         mTvMessage.setBackgroundResource(R.drawable.message_receive_background);
                     }
+                }else {
+                    mUserPic.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -235,23 +242,19 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     }
 
     public void addItem(Message message) {
-//        if(message!=null){
-//            if(message.getFromId()==)
-//        }
+        if(message!=null){
+            mListMessages.add(message);
+            notifyDataSetChanged();
+        }
         Log.d("onClick", "addItem: ");
-        mListMessages.add(message);
-        notifyDataSetChanged();
+
     }
 
-//    public void addAllUser(HashMap<String, User> userHashMap) {
-//        mHashMapUsers.putAll(userHashMap);
-//        // notifyDataSetChanged();
-//    }
 
     public void addUser(String key, User user) {
         if (user != null) {
             if (mHashMapUsers.get(key) != null) {
-                mHashMapUsers.get(key).setStatus(user.getStatus());
+                Objects.requireNonNull(mHashMapUsers.get(key)).setStatus(user.getStatus());
             } else {
                 mHashMapUsers.put(key, user);
             }
