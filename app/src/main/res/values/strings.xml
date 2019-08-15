@@ -10,4 +10,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fragment_register_button_cancel_text">Cancel</string>
+    <string name="fragment_group_chat_text_view_logout_text">LogOut</string>
 </resources>

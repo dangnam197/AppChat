@@ -38,8 +38,8 @@ public class GroupChatFragment extends Fragment {
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     private DatabaseReference mData;
-    private String mIdUser;
     private GroupChatCallBackActivity mCallBackActivity;
+    private User mCurrentUser;
     private static final String TAG = "ketqua";
 
     private View.OnClickListener mTxtLogOutClick = new View.OnClickListener() {
@@ -96,14 +96,15 @@ public class GroupChatFragment extends Fragment {
     private void initBundle() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mIdUser = bundle.getString(Contact.KEY_CURRENT_ID);
+            mCurrentUser = bundle.getParcelable(Contact.KEY_CURRENT_USER);
         }
     }
 
     private void initData() {
         mData = FirebaseDatabase.getInstance().getReference();
-        if (mIdUser != null) {
-            mData.child(Contact.TABLE_USER).child(mIdUser).addListenerForSingleValueEvent(new ValueEventListener() {
+
+        if (mCurrentUser != null) {
+            mData.child(Contact.TABLE_USER).child(mCurrentUser.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Log.d(TAG, "onDataChange: "+dataSnapshot.toString());
@@ -125,10 +126,10 @@ public class GroupChatFragment extends Fragment {
 
     private void initViewPager(){
         GroupFriendPagerAdapter mPagerAdapter = new GroupFriendPagerAdapter(getFragmentManager());
-        GroupFragment groupFragment = GroupFragment.newInstance(mIdUser);
+        GroupFragment groupFragment = GroupFragment.newInstance(mCurrentUser.getId());
         groupFragment.setInterface(mCallBackGroupChatFragment);
-        FriendFragment friendFragment = FriendFragment.newInstance(mIdUser);
-        FriendRequestFragment friendRequestFragment = FriendRequestFragment.newInstance(mIdUser);
+        FriendFragment friendFragment = FriendFragment.newInstance(mCurrentUser.getId());
+        FriendRequestFragment friendRequestFragment = FriendRequestFragment.newInstance(mCurrentUser.getId(),mCurrentUser.getFullName());
         mPagerAdapter.addFragment(groupFragment);
         mPagerAdapter.addFragment(friendFragment);
         mPagerAdapter.addFragment(friendRequestFragment);

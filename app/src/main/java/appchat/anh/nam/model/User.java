@@ -1,6 +1,9 @@
 package appchat.anh.nam.model;
 
-public class User {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class User implements Parcelable {
     private String fullName;
     private String id;
     private String profilePic;
@@ -15,6 +18,25 @@ public class User {
         this.profilePic = profilePic;
         this.status = status;
     }
+
+    protected User(Parcel in) {
+        fullName = in.readString();
+        id = in.readString();
+        profilePic = in.readString();
+        status = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -46,5 +68,18 @@ public class User {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(fullName);
+        dest.writeString(id);
+        dest.writeString(profilePic);
+        dest.writeString(status);
     }
 }
