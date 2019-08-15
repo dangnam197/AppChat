@@ -25,6 +25,7 @@ import appchat.anh.nam.FriendRequestFragment;
 import appchat.anh.nam.R;
 import appchat.anh.nam.adapter.GroupFriendPagerAdapter;
 import appchat.anh.nam.common.Contact;
+import appchat.anh.nam.model.Group;
 import appchat.anh.nam.model.User;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -51,14 +52,14 @@ public class GroupChatFragment extends Fragment {
 
     private GroupFragment.CallBackGroupChatFragment mCallBackGroupChatFragment = new GroupFragment.CallBackGroupChatFragment() {
         @Override
-        public void onItemGroupClick(String idUser, String idGroup) {
-            mCallBackActivity.actionCallChatActivity(idUser, idGroup);
+        public void onItemGroupClick(String idUser, Group group) {
+            mCallBackActivity.actionCallChatActivity(idUser, group);
         }
     };
 
     public interface GroupChatCallBackActivity{
         void actionSignOut();
-        void actionCallChatActivity(String idUser, String idGroup);
+        void actionCallChatActivity(String idUser, Group group);
     }
 
     public GroupChatFragment() {
