@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -23,10 +24,8 @@ import appchat.anh.nam.model.User;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
     private FragmentTransaction mFragmentTransaction;
     private FirebaseAuth mFireBaseAuth;
-    private User mUser;
 
     private RegisterFragment.ActionRegisterInterface mActionRegisterInterface = new RegisterFragment.ActionRegisterInterface() {
         @Override
@@ -87,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ActionBar actionBar = getSupportActionBar();
+        //actionBar.setTitle("HOàng Anh");
         User user = checkUser();
         if(user!=null){
             initGroupChatFragment(user);
