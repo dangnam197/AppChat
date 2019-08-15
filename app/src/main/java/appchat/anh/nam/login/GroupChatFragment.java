@@ -33,22 +33,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * A simple {@link Fragment} subclass.
  */
 public class GroupChatFragment extends Fragment {
-
-    private CircleImageView mImgAvatarCurrentUser;
-    private TextView mTxtCurrentUserName, mTxtLogOut;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
-    private DatabaseReference mData;
     private GroupChatCallBackActivity mCallBackActivity;
     private User mCurrentUser;
-    private static final String TAG = "ketqua";
-
-    private View.OnClickListener mTxtLogOutClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            mCallBackActivity.actionSignOut();
-        }
-    };
 
     private GroupFragment.CallBackGroupChatFragment mCallBackGroupChatFragment = new GroupFragment.CallBackGroupChatFragment() {
         @Override
@@ -58,7 +46,6 @@ public class GroupChatFragment extends Fragment {
     };
 
     public interface GroupChatCallBackActivity{
-        void actionSignOut();
         void actionCallChatActivity(String idUser, Group group);
     }
 
@@ -73,8 +60,6 @@ public class GroupChatFragment extends Fragment {
         initView(view);
         initBundle();
         initViewPager();
-        initAction();
-        initData();
         return view;
     }
 
@@ -83,45 +68,13 @@ public class GroupChatFragment extends Fragment {
     }
 
     private void initView(View view) {
-        mImgAvatarCurrentUser = view.findViewById(R.id.imgAvatarCurrentUser);
-        mTxtCurrentUserName = view.findViewById(R.id.txtCurrentUserName);
-        mTxtLogOut = view.findViewById(R.id.txtLogOut);
         mViewPager = view.findViewById(R.id.viewPager);
         mTabLayout = view.findViewById(R.id.tabLayout);
     }
-
-    private void initAction(){
-        mTxtLogOut.setOnClickListener(mTxtLogOutClick);
-    }
-
     private void initBundle() {
         Bundle bundle = getArguments();
         if (bundle != null) {
             mCurrentUser = bundle.getParcelable(Contact.KEY_CURRENT_USER);
-        }
-    }
-
-    private void initData() {
-        mData = FirebaseDatabase.getInstance().getReference();
-
-        if (mCurrentUser != null) {
-            mData.child(Contact.TABLE_USER).child(mCurrentUser.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Log.d(TAG, "onDataChange: "+dataSnapshot.toString());
-                    User user = dataSnapshot.getValue(User.class);
-                    if(user.getProfilePic()!=null){
-                        Glide.with(getContext()).load(user.getProfilePic()).placeholder(R.drawable.default_user).into(mImgAvatarCurrentUser);
-                    }
-                    if(user.getFullName()!=null){
-                        mTxtCurrentUserName.setText(user.getFullName());
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
         }
     }
 
